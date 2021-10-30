@@ -1,4 +1,4 @@
-import SocketIO, {Socket} from 'socket.io-client';
+import { Socket, io } from 'socket.io-client';
 import { SocketEventData, SocketEventName } from '../types';
 import * as uuid from 'uuid';
 import { SecurityPrototype } from '../util';
@@ -24,7 +24,7 @@ export function BCMSSocketHandler(security: SecurityPrototype) {
         return await new Promise<void>((resolve, reject) => {
           try {
             const signature = security.sign({});
-            socket = SocketIO(server.url, {
+            socket = io(server.url, {
               path: server.path,
               query: {
                 timestamp: '' + signature.timestamp,
