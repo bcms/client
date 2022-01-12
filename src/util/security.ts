@@ -1,46 +1,36 @@
-import * as crypto from 'crypto-js';
-import { ApiKey, ApiKeySignature } from '../types';
+import { random as randomBytes } from 'crypto-js/lib-typedarrays';
+import * as hmacSHA256 from 'crypto-js/hmac-sha256';
+import type { BCMSApiKeySignature, BCMSClientSecurity } from '../types';
+import { Buffer } from 'buffer';
 
-export interface SecurityPrototype {
-  sign(payload: any): ApiKeySignature;
-}
-
-function security(key: ApiKey): SecurityPrototype {
+export function createBcmsClientSecurity({
+  apiKeyId,
+  apiKeySecret,
+}: {
+  apiKeyId: string;
+  apiKeySecret: string;
+}): BCMSClientSecurity {
   return {
-    sign(payload: any) {
-      const data = {
-        key: key.id,
-        timestamp: Date.now(),
-        nonce: crypto.lib.WordArray.random(3).toString(),
-        signature: '',
+    sign(payload) {
+      const data: BCMSApiKeySignature = {
+        k: apiKeyId,
+        t: Date.now(),
+        n: randomBytes(3).toString(),
+        s: '',
       };
-      let payloadAsString = '';
+      let payloadAsString: string;
       if (typeof payload === 'object') {
-        if (
-          typeof window !== 'undefined' &&
-          typeof window.btoa !== 'undefined'
-        ) {
-          payloadAsString = window.btoa(
-            encodeURIComponent(JSON.stringify(payload)),
-          );
-          // payloadAsString = window.btoa(JSON.stringify(payload));
-        } else {
-          payloadAsString = Buffer.from(
-            encodeURIComponent(JSON.stringify(payload)),
-          ).toString('base64');
-        }
+        payloadAsString = Buffer.from(
+          encodeURIComponent(JSON.stringify(payload)),
+        ).toString('base64');
       } else {
         payloadAsString = '' + payload;
       }
-      data.signature = crypto
-        .HmacSHA256(
-          data.nonce + data.timestamp + key.id + payloadAsString,
-          key.secret,
-        )
-        .toString();
+      data.s = hmacSHA256(
+        data.n + data.t + data.k + payloadAsString,
+        apiKeySecret,
+      ).toString();
       return data;
     },
   };
 }
-
-export const Security = security;

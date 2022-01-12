@@ -1,29 +1,29 @@
-import {
-  BCMSEntryHandler,
-  BCMSFunctionHandler,
-  BCMSMediaHandler,
-  BCMSSocketHandler,
-  BCMSTemplateHandler,
-} from './handlers';
-import { ApiKey, ApiKeyAccess, ApiKeySignature } from './types';
-import { HandlerManager } from './types';
-import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ErrorWrapper, Security } from './util';
+import Axios from 'axios';
+import { createBcmsClientFunctionHandler } from './handlers';
+import type {
+  BCMSApiKeyAccess,
+  BCMSApiKeySignature,
+  BCMSClient,
+  BCMSClientConfig,
+  GetKeyAccess,
+  SendFunction,
+} from './types';
+import { createBcmsClientSecurity, errorWrapper } from './util';
 
-export interface BCMSClientPrototype extends HandlerManager {
-  keyAccess(): Promise<ApiKeyAccess>;
-}
+export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
+  if (config.cmsOrigin.endsWith('/')) {
+    config.cmsOrigin = config.cmsOrigin.substring(
+      0,
+      config.cmsOrigin.length - 1,
+    );
+  }
+  let keyAccess: BCMSApiKeyAccess | undefined = undefined;
+  const security = createBcmsClientSecurity({
+    apiKeyId: config.key.id,
+    apiKeySecret: config.key.secret,
+  });
 
-function bcmsClient(config: {
-  cmsOrigin: string;
-  key: ApiKey;
-}): BCMSClientPrototype {
-  let keyAccess: ApiKeyAccess;
-  const security = Security(config.key);
-  async function send<T>(
-    conf: AxiosRequestConfig,
-    doNotAuth?: boolean,
-  ): Promise<T> {
+  const send: SendFunction = async (conf) => {
     if (conf.data && typeof conf.data === 'object') {
       if (conf.headers) {
         conf.headers['Content-Type'] = 'application/json';
@@ -33,15 +33,18 @@ function bcmsClient(config: {
         };
       }
     }
-    let signature: ApiKeySignature;
-    if (!doNotAuth) {
-      const signatureResult = await ErrorWrapper.exec<ApiKeySignature>(
-        async () => {
+    let signature: BCMSApiKeySignature | undefined = undefined;
+    if (!conf.doNotUseAuth) {
+      const signatureResult = await errorWrapper({
+        exec: async () => {
           return security.sign(
             typeof conf.data === 'undefined' ? {} : conf.data,
           );
         },
-      );
+        onSuccess: async (result) => {
+          return result;
+        },
+      });
       if (!signatureResult) {
         return;
       }
@@ -49,55 +52,61 @@ function bcmsClient(config: {
     }
     conf.url = `${config.cmsOrigin}/api${conf.url}`;
     if (signature) {
-      conf.url +=
-        '?key=' +
-        signature.key +
-        '&timestamp=' +
-        signature.timestamp +
-        '&nonce=' +
-        signature.nonce +
-        '&signature=' +
-        signature.signature;
+      if (conf.query) {
+        conf.query.key = signature.k;
+        conf.query.nonce = signature.n;
+        conf.query.timestamp = '' + signature.t;
+        conf.query.signature = signature.s;
+      } else {
+        conf.query = {
+          key: signature.k,
+          nonce: signature.n,
+          timestamp: '' + signature.t,
+          signature: signature.s,
+        };
+      }
+      if (conf.query) {
+        const queryPairs: string[] = [];
+        for (const key in conf.query) {
+          queryPairs.push(`${key}=${encodeURIComponent(conf.query[key])}`);
+        }
+        if (conf.url.includes('?')) {
+          conf.url += `&${queryPairs.join('&')}`;
+        } else {
+          conf.url += `?${queryPairs.join('&')}`;
+        }
+      }
+      return (await errorWrapper({
+        exec: async () => {
+          return await Axios(conf);
+        },
+        onSuccess: async (result) => {
+          return result.data as unknown;
+        },
+        onError: conf.onError,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      })) as any;
     }
-    const response = await ErrorWrapper.exec<AxiosResponse>(async () => {
-      return await Axios({
-        url: conf.url,
-        method: conf.method,
-        headers: conf.headers,
-        responseType: conf.responseType,
-        data: conf.data,
-      });
-    });
-    if (!response) {
-      return;
-    }
-    return response.data;
-  }
-  async function getKeyAccess(): Promise<ApiKeyAccess> {
+  };
+  const getKeyAccess: GetKeyAccess = async () => {
     if (!keyAccess) {
-      const result: {
-        access: ApiKeyAccess;
-      } = await send({
-        url: `/key/access/list`,
+      const result: BCMSApiKeyAccess = await send({
+        url: '/key/access/list',
         method: 'GET',
       });
-      keyAccess = result.access;
+      keyAccess = result;
     }
     return JSON.parse(JSON.stringify(keyAccess));
-  }
-  const handlerManger: HandlerManager = {
-    template: BCMSTemplateHandler(getKeyAccess, send),
-    entry: BCMSEntryHandler(getKeyAccess, send),
-    media: BCMSMediaHandler(send),
-    function: BCMSFunctionHandler(getKeyAccess, send),
-    socket: BCMSSocketHandler(security),
   };
+
+  const functionHandler = createBcmsClientFunctionHandler({
+    send,
+    getKeyAccess,
+  });
+
   return {
-    ...handlerManger,
-    keyAccess() {
-      return getKeyAccess();
-    },
+    send,
+    getKeyAccess,
+    function: functionHandler,
   };
 }
-
-export const BCMSClient = bcmsClient;

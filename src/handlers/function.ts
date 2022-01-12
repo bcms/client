@@ -1,27 +1,45 @@
-import { FunctionResponse, GetApiKeyAccess, Send } from '../types';
+import type { AxiosError } from 'axios';
+import type {
+  SendFunction,
+  GetKeyAccess,
+  BCMSClientFunctionHandler,
+} from '../types';
 
-export interface BCMSFunctionHandlerPrototype {
-  call<T>(name: string, body?: any): Promise<FunctionResponse<T>>;
-}
-
-function bcmsFunctionHandler(
-  getKeyAccess: GetApiKeyAccess,
-  send: Send,
-): BCMSFunctionHandlerPrototype {
+export function createBcmsClientFunctionHandler({
+  send,
+  getKeyAccess,
+}: {
+  send: SendFunction;
+  getKeyAccess: GetKeyAccess;
+}): BCMSClientFunctionHandler {
   return {
-    async call<T>(name: string, body?: any): Promise<FunctionResponse<T>> {
-      const keyAccess = await getKeyAccess();
-      const access = keyAccess.functions.find((e) => e.name === name);
-      if (!access) {
-        throw Error(`Key is not allowed to call function "${name}".`);
+    async call(fnName, payload) {
+      const accessList = await getKeyAccess();
+      if (!accessList.functions.find((e) => e.name === fnName)) {
+        throw Error(
+          'You do not have permission to call this function. Allowed functions: ' +
+            accessList.functions.join(''),
+        );
       }
-      return await send({
-        url: `/function/${name}`,
+      const result = await send<
+        {
+          success: boolean;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          result: any;
+        },
+        AxiosError
+      >({
+        url: `/function/${fnName}`,
         method: 'POST',
-        data: body,
+        data: payload,
+        async onError(error) {
+          return error;
+        },
       });
+      if (!result.result) {
+        throw result;
+      }
+      return result;
     },
   };
 }
-
-export const BCMSFunctionHandler = bcmsFunctionHandler;
