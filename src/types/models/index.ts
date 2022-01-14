@@ -13,5 +13,6 @@ export * from './status';
 export * from './tag';
 export * from './template';
 export * from './template-organizer';
+export * from './type-converter';
 export * from './user';
 export * from './widget';

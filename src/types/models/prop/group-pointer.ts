@@ -1,7 +1,11 @@
-import type { BCMSPropValue } from "./main";
+import type { BCMSPropValue, BCMSPropDataParsed } from './main';
 
 export interface BCMSPropGroupPointerData {
   _id: string;
+}
+
+export interface BCMSPropGroupPointerDataParsed {
+  [key: string]: BCMSPropDataParsed | BCMSPropDataParsed[];
 }
 
 export interface BCMSPropValueGroupPointerData {

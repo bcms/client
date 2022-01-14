@@ -1,4 +1,8 @@
-import type { BCMSPropValue, BCMSPropValueWidgetData } from './prop';
+import type {
+  BCMSPropValue,
+  BCMSPropValueWidgetData,
+  BCMSPropParsed,
+} from './prop';
 import type { BCMSEntity } from './_entity';
 
 export interface BCMSEntryContent {
@@ -70,4 +74,28 @@ export interface BCMSEntry extends BCMSEntity {
   status?: string;
   meta: BCMSEntryMeta[];
   content: BCMSEntryContent[];
+}
+
+export interface BCMSEntryParsedMeta {
+  [lng: string]: BCMSPropParsed;
+}
+
+export interface BCMSEntryContentParsedItem {
+  type: BCMSEntryContentNodeType;
+  attrs?: {
+    level?: number;
+  };
+  value: string | BCMSPropParsed;
+}
+
+export interface BCMSEntryContentParsed {
+  [lng: string]: BCMSEntryContentParsedItem[];
+}
+
+export interface BCMSEntryParsed extends BCMSEntity {
+  templateId: string;
+  userId: string;
+  status: string;
+  meta: BCMSEntryParsedMeta;
+  content: BCMSEntryContentParsed;
 }

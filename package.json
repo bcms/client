@@ -17,7 +17,7 @@
     "pack:local": "npm-tool --local-dev-pack",
     "create:image": "npm-tool --create-image",
     "typedoc": "typedoc",
-    "t": "ts-node src/test.ts",
+    "t": "ts-node -r tsconfig-paths/register src/test.ts",
     "test": "mocha -r ts-node/register test/integration/*.test.ts --recursive --exit",
     "test:active": "mocha -r ts-node/register test/integration/*.active.test.ts --recursive --exit",
     "test:unit": "mocha -r ts-node/register test/unit/*.test.ts --recursive --exit",
@@ -31,6 +31,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@banez/fs": "^1.0.1",
     "@banez/npm-tool": "^1.0.1",
     "@types/chai": "^4.2.18",
     "@types/crypto-js": "^4.1.0",
@@ -45,6 +46,7 @@
     "mocha": "^9.1.3",
     "prettier": "^2.5.1",
     "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.12.0",
     "typedoc": "^0.22.10",
     "typescript": "^4.4.4"
   },

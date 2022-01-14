@@ -1,5 +1,10 @@
 import Axios from 'axios';
-import { createBcmsClientFunctionHandler } from './handlers';
+import {
+  createBcmsClientFunctionHandler,
+  createBcmsClientTypeConverterHandler,
+  createBcmsClientEntryHandler,
+  createBcmsClientMediaHandler,
+} from './handlers';
 import type {
   BCMSApiKeyAccess,
   BCMSApiKeySignature,
@@ -103,10 +108,19 @@ export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
     send,
     getKeyAccess,
   });
+  const entryHandler = createBcmsClientEntryHandler({
+    send,
+    getKeyAccess,
+  });
+  const typeConverterHandler = createBcmsClientTypeConverterHandler({ send });
+  const mediaHandler = createBcmsClientMediaHandler({ send });
 
   return {
     send,
     getKeyAccess,
     function: functionHandler,
+    entry: entryHandler,
+    typeConverter: typeConverterHandler,
+    media: mediaHandler,
   };
 }

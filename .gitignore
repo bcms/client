@@ -3,6 +3,7 @@
 /node_modules
 public/bundle.*
 /doc
+/src/bcms-types
 
 # Sapper
 /src/frontend/node_modules/@sapper/

@@ -1,4 +1,7 @@
-import type { BCMSEntryContentNode } from '../entry';
+import type {
+  BCMSEntryContentNode,
+  BCMSEntryContentParsedItem,
+} from '../entry';
 
 export interface BCMSPropRichTextData {
   nodes: BCMSEntryContentNode[];
@@ -7,3 +10,7 @@ export interface BCMSPropRichTextData {
 export interface BCMSPropValueRichTextData {
   nodes: BCMSEntryContentNode[];
 }
+
+export type BCMSPropRichTextDataParsed =
+  | BCMSEntryContentParsedItem[]
+  | BCMSEntryContentParsedItem[][];

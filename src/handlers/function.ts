@@ -16,10 +16,18 @@ export function createBcmsClientFunctionHandler({
     async call(fnName, payload) {
       const accessList = await getKeyAccess();
       if (!accessList.functions.find((e) => e.name === fnName)) {
-        throw Error(
-          'You do not have permission to call this function. Allowed functions: ' +
-            accessList.functions.join(''),
-        );
+        return {
+          success: false,
+          result: {
+            message: [
+              `You do not have permission to call "${fnName}" function.`,
+              'Allowed functions:',
+              accessList.functions.length === 0
+                ? 'NONE'
+                : accessList.functions.map((e) => e.name).join(', '),
+            ].join(' '),
+          },
+        };
       }
       const result = await send<
         {

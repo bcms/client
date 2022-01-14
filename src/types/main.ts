@@ -1,11 +1,19 @@
 import type { AxiosError, AxiosRequestConfig } from 'axios';
-import type { BCMSClientFunctionHandler } from '.';
+import type {
+  BCMSClientEntryHandler,
+  BCMSClientFunctionHandler,
+  BCMSClientTypeConverterHandler,
+  BCMSClientMediaHandler,
+} from './handlers';
 import type { BCMSApiKeyAccess } from './models';
 
 export interface BCMSClient {
   getKeyAccess(): Promise<BCMSApiKeyAccess>;
   send: SendFunction;
   function: BCMSClientFunctionHandler;
+  entry: BCMSClientEntryHandler;
+  typeConverter: BCMSClientTypeConverterHandler;
+  media: BCMSClientMediaHandler;
 }
 
 export interface SendFunction {
