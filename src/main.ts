@@ -4,6 +4,8 @@ import {
   createBcmsClientTypeConverterHandler,
   createBcmsClientEntryHandler,
   createBcmsClientMediaHandler,
+  createBcmsClientSocketHandler,
+  createBcmsClientTemplateHandler,
 } from './handlers';
 import type {
   BCMSApiKeyAccess,
@@ -114,6 +116,11 @@ export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
   });
   const typeConverterHandler = createBcmsClientTypeConverterHandler({ send });
   const mediaHandler = createBcmsClientMediaHandler({ send });
+  const socketHandler = createBcmsClientSocketHandler({
+    security,
+    cmsOrigin: config.cmsOrigin,
+  });
+  const templateHandler = createBcmsClientTemplateHandler({ send });
 
   return {
     send,
@@ -122,5 +129,7 @@ export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
     entry: entryHandler,
     typeConverter: typeConverterHandler,
     media: mediaHandler,
+    socket: socketHandler,
+    template: templateHandler,
   };
 }

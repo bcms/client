@@ -4,6 +4,8 @@ import type {
   BCMSClientFunctionHandler,
   BCMSClientTypeConverterHandler,
   BCMSClientMediaHandler,
+  BCMSClientSocketHandler,
+  BCMSClientTemplateHandler,
 } from './handlers';
 import type { BCMSApiKeyAccess } from './models';
 
@@ -14,6 +16,8 @@ export interface BCMSClient {
   entry: BCMSClientEntryHandler;
   typeConverter: BCMSClientTypeConverterHandler;
   media: BCMSClientMediaHandler;
+  socket: BCMSClientSocketHandler;
+  template: BCMSClientTemplateHandler;
 }
 
 export interface SendFunction {

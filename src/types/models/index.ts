@@ -9,6 +9,7 @@ export * from './group';
 export * from './id-counter';
 export * from './language';
 export * from './media';
+export * from './socket';
 export * from './status';
 export * from './tag';
 export * from './template';

@@ -13,6 +13,8 @@
     "baseUrl": "./",
     "rootDir": "./src",
     "importsNotUsedAsValues": "error",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "paths": {
       "@becomes/cms-client": ["./src"],
       "@becomes/cms-client/*": ["./src/*"]
