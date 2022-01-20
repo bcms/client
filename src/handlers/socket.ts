@@ -3,6 +3,7 @@ import { Socket, io } from 'socket.io-client';
 import {
   BCMSClientSecurity,
   BCMSClientSocketEventCallback,
+  BCMSClientSocketEventName,
   BCMSClientSocketHandler,
   BCMSSocketEvent,
   BCMSSocketEventName,
@@ -30,7 +31,7 @@ export function createBcmsClientSocketHandler({
   subs.ANY = {};
 
   function triggerSubs(
-    eventName: BCMSSocketEventName | 'ANY',
+    eventName: BCMSClientSocketEventName,
     event: BCMSSocketEvent,
   ) {
     for (const id in subs[eventName]) {
@@ -51,7 +52,7 @@ export function createBcmsClientSocketHandler({
   function initSocket(soc: Socket) {
     for (const eventName in subs) {
       soc.on(eventName, (data) => {
-        triggerSubs(eventName as 'ANY', data);
+        triggerSubs(eventName, data);
       });
     }
   }
@@ -77,7 +78,12 @@ export function createBcmsClientSocketHandler({
             socket = io(cmsOrigin, {
               path: '/api/socket/server',
               transports: ['websocket'],
-              query: sign,
+              query: {
+                key: sign.k,
+                nonce: sign.n,
+                timestamp: sign.t,
+                signature: sign.s,
+              },
               autoConnect: false,
             });
             socket.connect();
@@ -124,12 +130,13 @@ export function createBcmsClientSocketHandler({
     },
     subscribe(eventName, callback) {
       const id = uuidv4();
-      if (subs[eventName]) {
-        throw Error(
-          `Event name "${eventName}" is not allowed. Allowed events: ${Object.keys(
-            BCMSSocketEventName,
-          ).join(', ')}, ANY.`,
-        );
+      if (!subs[eventName]) {
+        subs[eventName] = {};
+        if (socket) {
+          socket.on(eventName, (data) => {
+            triggerSubs(eventName, data);
+          });
+        }
       }
       subs[eventName][id] = callback as BCMSClientSocketEventCallback<unknown>;
       return () => {

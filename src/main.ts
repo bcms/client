@@ -6,6 +6,7 @@ import {
   createBcmsClientMediaHandler,
   createBcmsClientSocketHandler,
   createBcmsClientTemplateHandler,
+  createBcmsChangesHandler,
 } from './handlers';
 import type {
   BCMSApiKeyAccess,
@@ -121,6 +122,7 @@ export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
     cmsOrigin: config.cmsOrigin,
   });
   const templateHandler = createBcmsClientTemplateHandler({ send });
+  const changesHandler = createBcmsChangesHandler({ send });
 
   return {
     send,
@@ -131,5 +133,6 @@ export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
     media: mediaHandler,
     socket: socketHandler,
     template: templateHandler,
+    changes: changesHandler,
   };
 }

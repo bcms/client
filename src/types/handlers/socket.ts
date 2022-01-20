@@ -1,9 +1,9 @@
-import type { BCMSSocketEvent, BCMSSocketEventName } from '..';
+import type { BCMSSocketEvent, BCMSSocketEventName } from '../models';
 
-type EventName = BCMSSocketEventName | 'ANY';
+export type BCMSClientSocketEventName = BCMSSocketEventName | string | 'ANY';
 
 export interface BCMSClientSocketEventCallback<Data = BCMSSocketEvent> {
-  (data: { eventName: EventName; data: Data }): Promise<void>;
+  (data: { eventName: BCMSClientSocketEventName; data: Data }): Promise<void>;
 }
 
 export interface BCMSClientSocketHandler {
@@ -11,9 +11,9 @@ export interface BCMSClientSocketHandler {
   connect(): Promise<void>;
   disconnect(): void;
   connected(): boolean;
-  emit<Data>(event: string, data: Data): void;
+  emit<Data = BCMSSocketEvent>(event: string, data: Data): void;
   subscribe<CallbackData = BCMSSocketEvent>(
-    event: EventName,
+    event: BCMSClientSocketEventName,
     callback: BCMSClientSocketEventCallback<CallbackData>,
   ): () => void;
 }
