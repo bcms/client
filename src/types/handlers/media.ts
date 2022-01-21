@@ -1,7 +1,7 @@
 import type { BCMSMedia } from '../models';
 
 export interface BCMSClientMediaBinFn {
-  (): Promise<ArrayBuffer>;
+  (data?: { onProgress?(progress: number): void }): Promise<ArrayBuffer>;
 }
 
 export interface BCMSClientMediaResponseItem extends BCMSMedia {

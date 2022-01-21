@@ -13,11 +13,23 @@ export function createBcmsClientMediaHandler({
   const basePath = '/media';
 
   function binFn(media: BCMSMedia): BCMSClientMediaBinFn {
-    return async () => {
+    return async (data) => {
+      const onProgress =
+        data && data.onProgress
+          ? data.onProgress
+          : (_progress: number) => {
+              // Do nothing.
+            };
       return await send<ArrayBuffer>({
         url: `${basePath}/${media._id}/bin`,
         method: 'GET',
         responseType: 'arraybuffer',
+        onDownloadProgress:
+          data && data.onProgress
+            ? (event) => {
+                onProgress((100 * event.loaded) / event.total);
+              }
+            : undefined,
       });
     };
   }
