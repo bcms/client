@@ -14,7 +14,7 @@ export function createBcmsClientTemplateHandler({
   return {
     async get(data) {
       const result = await send<{ item: BCMSTemplate }>({
-        url: `${basePath}/${data.templateId}`,
+        url: `${basePath}/${data.template}`,
         method: 'GET',
       });
       return result.item;

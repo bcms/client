@@ -22,5 +22,6 @@ export async function errorWrapper<
       return await onError(error);
     }
     console.error(error);
+    throw error;
   }
 }
