@@ -1,12 +1,12 @@
-import { Entry, GetApiKeyAccess, Send } from '../types';
+import { Entry, EntryParsed, GetApiKeyAccess, Send } from '../types';
 
 export interface BCMSEntryHandlerPrototype {
-  getAll(templateId: string, parse?: boolean): Promise<Entry[]>;
+  getAll(templateId: string, parse?: boolean): Promise<Entry[] | EntryParsed[]>;
   get(data: {
     templateId: string;
     entryId: string;
     parse?: boolean;
-  }): Promise<Entry>;
+  }): Promise<Entry | EntryParsed>;
 }
 
 function bcmsEntryHandler(

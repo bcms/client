@@ -3,7 +3,7 @@ import { PropGroupPointer } from './group-pointer';
 import { PropEntryPointer } from './entry-pointer';
 import { PropMedia } from './media';
 import { PropQuill } from './quill';
-import { PropWidget } from './widget';
+import { PropWidget, PropWidgetParsed } from './widget';
 
 export enum PropType {
   STRING = 'STRING',
@@ -48,3 +48,18 @@ export interface Prop {
     | PropQuill
     | PropWidget;
 }
+
+export type PropParsed =
+  | string
+  | string[]
+  | boolean
+  | boolean[]
+  | number
+  | number[]
+  | PropEnum
+  | PropWidgetParsed
+  | {
+      type: PropType;
+      value: PropParsed;
+      name: string;
+    };
