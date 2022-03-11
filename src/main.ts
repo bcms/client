@@ -7,6 +7,7 @@ import {
   createBcmsClientSocketHandler,
   createBcmsClientTemplateHandler,
   createBcmsChangesHandler,
+  createBcmsClientCacheManager,
 } from './handlers';
 import type {
   BCMSApiKeyAccess,
@@ -107,21 +108,35 @@ export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
     return JSON.parse(JSON.stringify(keyAccess));
   };
 
+  const cacheManager = createBcmsClientCacheManager();
   const functionHandler = createBcmsClientFunctionHandler({
     send,
     getKeyAccess,
   });
-  const entryHandler = createBcmsClientEntryHandler({
-    send,
-    getKeyAccess,
-  });
-  const typeConverterHandler = createBcmsClientTypeConverterHandler({ send });
-  const mediaHandler = createBcmsClientMediaHandler({ send });
   const socketHandler = createBcmsClientSocketHandler({
     security,
     cmsOrigin: config.cmsOrigin,
   });
-  const templateHandler = createBcmsClientTemplateHandler({ send });
+  const entryHandler = createBcmsClientEntryHandler({
+    send,
+    getKeyAccess,
+    socket: socketHandler,
+    cacheManager,
+    enableCache: config.enableCache,
+  });
+  const typeConverterHandler = createBcmsClientTypeConverterHandler({ send });
+  const mediaHandler = createBcmsClientMediaHandler({
+    send,
+    socket: socketHandler,
+    cacheManager,
+    enableCache: config.enableCache,
+  });
+  const templateHandler = createBcmsClientTemplateHandler({
+    send,
+    socket: socketHandler,
+    cacheManager,
+    enableCache: config.enableCache,
+  });
   const changesHandler = createBcmsChangesHandler({ send });
 
   return {
@@ -134,5 +149,6 @@ export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
     socket: socketHandler,
     template: templateHandler,
     changes: changesHandler,
+    cacheManager,
   };
 }

@@ -4,4 +4,5 @@ export interface BCMSClientConfig {
     id: string;
     secret: string;
   };
+  enableCache?: boolean;
 }

@@ -7,6 +7,7 @@ import type {
   BCMSClientSocketHandler,
   BCMSClientTemplateHandler,
   BCMSClientChangesHandler,
+  BCMSClientCacheManager,
 } from './handlers';
 import type { BCMSApiKeyAccess } from './models';
 
@@ -20,6 +21,7 @@ export interface BCMSClient {
   socket: BCMSClientSocketHandler;
   template: BCMSClientTemplateHandler;
   changes: BCMSClientChangesHandler;
+  cacheManager: BCMSClientCacheManager;
 }
 
 export interface SendFunction {
