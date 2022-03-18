@@ -9,7 +9,9 @@ export interface BCMSClientMediaResponseItem extends BCMSMedia {
 }
 
 export interface BCMSClientMediaHandler {
-  getAll(): Promise<BCMSClientMediaResponseItem[]>;
-  get(id: string): Promise<BCMSClientMediaResponseItem>;
-  download(id: string): Promise<ArrayBuffer>;
+  getAll(data?: {
+    skipCache?: boolean;
+  }): Promise<BCMSClientMediaResponseItem[]>;
+  get(id: string, skipCache?: boolean): Promise<BCMSClientMediaResponseItem>;
+  download(id: string, skipCache?: boolean): Promise<ArrayBuffer>;
 }

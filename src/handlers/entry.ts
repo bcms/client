@@ -61,7 +61,7 @@ export function createBcmsClientEntryHandler({
 
   const self: BCMSClientEntryHandler = {
     async getAll(data) {
-      if (enableCache && getAllLatch.p[data.template]) {
+      if (!data.skipCache && enableCache && getAllLatch.p[data.template]) {
         return cacheManager.entryParsed.find(
           (e) => e.templateId === getAllLatch.p[data.template],
         );
@@ -85,7 +85,7 @@ export function createBcmsClientEntryHandler({
       return result.items;
     },
     async getAllRaw(data) {
-      if (enableCache && getAllLatch.r[data.template]) {
+      if (!data.skipCache && enableCache && getAllLatch.r[data.template]) {
         return cacheManager.entry.find(
           (e) => e.templateId === getAllLatch.r[data.template],
         );
@@ -109,7 +109,7 @@ export function createBcmsClientEntryHandler({
       return result.items;
     },
     async get(data) {
-      if (enableCache) {
+      if (!data.skipCache && enableCache) {
         const cacheHit = cacheManager.entryParsed.findOne(
           (e) => e._id === data.entry || e.meta.en.slug === data.entry,
         );
@@ -134,7 +134,7 @@ export function createBcmsClientEntryHandler({
       return result.item;
     },
     async getRaw(data) {
-      if (enableCache) {
+      if (!data.skipCache && enableCache) {
         const cacheHit = cacheManager.entry.findOne(
           (e) =>
             e._id === data.entry ||

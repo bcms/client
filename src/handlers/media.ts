@@ -66,8 +66,8 @@ export function createBcmsClientMediaHandler({
         responseType: 'arraybuffer',
       });
     },
-    async get(id) {
-      if (enableCache) {
+    async get(id, skipCache) {
+      if (!skipCache && enableCache) {
         const cacheHit = cacheManager.media.findOne((e) => e._id === id);
         if (cacheHit) {
           return {
@@ -88,8 +88,9 @@ export function createBcmsClientMediaHandler({
         bin: binFn(result.item),
       };
     },
-    async getAll() {
-      if (enableCache && cacheManager.media.all) {
+    async getAll(data) {
+      const skipCache = data && data.skipCache;
+      if (!skipCache && enableCache && cacheManager.media.all) {
         return cacheManager.media.items().map((item) => {
           return {
             ...item,

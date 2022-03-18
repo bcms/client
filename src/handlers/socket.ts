@@ -8,6 +8,7 @@ import {
   BCMSSocketEvent,
   BCMSSocketEventName,
 } from '../types';
+import { clearInterval } from 'timers';
 
 export function createBcmsClientSocketHandler({
   cmsOrigin,
@@ -24,11 +25,14 @@ export function createBcmsClientSocketHandler({
   const eventNames = Object.keys(BCMSSocketEventName);
   let isConnected = false;
   let socket: Socket | null = null;
+  let checkConnectionInterval: NodeJS.Timeout;
+  const shouldBeConnected = false;
 
   eventNames.forEach((eventName) => {
     subs[eventName] = {};
   });
   subs.ANY = {};
+  subs.RECONNECT = {};
 
   function triggerSubs(
     eventName: BCMSClientSocketEventName,
@@ -56,8 +60,17 @@ export function createBcmsClientSocketHandler({
       });
     }
   }
+  async function reconnect() {
+    if (shouldBeConnected && !isConnected) {
+      await self.connect();
 
-  return {
+      if (isConnected) {
+        triggerSubs('RECONNECT', undefined as never);
+      }
+    }
+  }
+
+  const self: BCMSClientSocketHandler = {
     id() {
       if (socket) {
         return socket.id;
@@ -70,6 +83,9 @@ export function createBcmsClientSocketHandler({
       }
     },
     async connect() {
+      if (!checkConnectionInterval) {
+        checkConnectionInterval = setInterval(reconnect, 5000);
+      }
       if (!isConnected) {
         isConnected = true;
         return await new Promise((resolve, reject) => {
@@ -127,6 +143,9 @@ export function createBcmsClientSocketHandler({
         socket.disconnect();
         isConnected = false;
       }
+      if (checkConnectionInterval) {
+        clearInterval(checkConnectionInterval);
+      }
     },
     subscribe(eventName, callback) {
       const id = uuidv4();
@@ -144,4 +163,6 @@ export function createBcmsClientSocketHandler({
       };
     },
   };
+
+  return self;
 }

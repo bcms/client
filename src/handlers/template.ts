@@ -36,8 +36,9 @@ export function createBcmsClientTemplateHandler({
   }
 
   const self: BCMSClientTemplateHandler = {
-    async getAll() {
-      if (enableCache && cacheManager.template.all) {
+    async getAll(data) {
+      const skipCache = data && data.skipCache;
+      if (!skipCache && enableCache && cacheManager.template.all) {
         return cacheManager.template.items();
       }
       const result = await send<{ items: BCMSTemplate[] }>({
@@ -51,7 +52,7 @@ export function createBcmsClientTemplateHandler({
       return result.items;
     },
     async get(data) {
-      if (enableCache) {
+      if (!data.skipCache && enableCache) {
         const cacheHit = cacheManager.template.findOne(
           (e) => e._id === data.template || e.name === data.template,
         );
