@@ -85,6 +85,7 @@ export interface BCMSEntryContentParsedItem {
   attrs?: {
     level?: number;
   };
+  name?: string;
   value: string | BCMSPropParsed;
 }
 
