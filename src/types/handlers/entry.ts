@@ -4,6 +4,7 @@ export interface BCMSClientEntryHandler {
   getAll(data: {
     template: string;
     lng?: string;
+    maxDepth?: number;
     skipCache?: boolean;
   }): Promise<BCMSEntryParsed[]>;
   getAllRaw(data: {
@@ -15,6 +16,7 @@ export interface BCMSClientEntryHandler {
     template: string;
     entry: string;
     lng?: string;
+    maxDepth?: number;
     skipCache?: boolean;
   }): Promise<BCMSEntryParsed>;
   getRaw(data: {

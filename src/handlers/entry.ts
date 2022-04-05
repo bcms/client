@@ -74,7 +74,9 @@ export function createBcmsClientEntryHandler({
         throw Error('Key cannot access this template.');
       }
       const result = await send<{ items: BCMSEntryParsed[] }>({
-        url: `/entry/all/${data.template}/parse`,
+        url: `/entry/all/${data.template}/parse${
+          data.maxDepth ? '/' + data.maxDepth : 2
+        }`,
         method: 'GET',
       });
       if (enableCache && result.items.length > 0) {
@@ -125,7 +127,9 @@ export function createBcmsClientEntryHandler({
         throw Error('Key cannot access this template.');
       }
       const result = await send<{ item: BCMSEntryParsed }>({
-        url: `/entry/${data.template}/${data.entry}/parse`,
+        url: `/entry/${data.template}/${data.entry}/parse${
+          data.maxDepth ? '/' + data.maxDepth : 2
+        }`,
         method: 'GET',
       });
       if (enableCache) {
