@@ -26,7 +26,7 @@ export function createBcmsClientSocketHandler({
   let isConnected = false;
   let socket: Socket | null = null;
   let checkConnectionInterval: NodeJS.Timeout;
-  const shouldBeConnected = false;
+  let shouldBeConnected = false;
 
   eventNames.forEach((eventName) => {
     subs[eventName] = {};
@@ -121,6 +121,7 @@ export function createBcmsClientSocketHandler({
               // eslint-disable-next-line no-console
               console.log('Successfully connected to Socket server.');
               isConnected = true;
+              shouldBeConnected = true;
               initSocket(socket as Socket);
               resolve();
             });
