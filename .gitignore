@@ -2,6 +2,9 @@
 /dist
 /node_modules
 public/bundle.*
+/doc
+/src/bcms-types
+/src/test.ts
 
 # Sapper
 /src/frontend/node_modules/@sapper/
