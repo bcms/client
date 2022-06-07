@@ -21,7 +21,7 @@
     }
   },
   "typedocOptions": {
-    "entryPoints": ["src"],
+    "entryPoints": ["src/main.ts", "src/types/index.ts"],
     "name": "BCMS | Client",
     "out": "doc"
   },
