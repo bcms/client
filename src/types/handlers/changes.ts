@@ -15,6 +15,12 @@ export interface BCMSClientChangesGetInfoData {
   widget: BCMSClientChangesGetInfoDataProp;
 }
 
+/**
+ * The BCMS changes API handler.
+ */
 export interface BCMSClientChangesHandler {
+  /**
+   * Get changes object.
+   */
   getInfo(): Promise<BCMSClientChangesGetInfoData>;
 }

@@ -19,6 +19,9 @@ import type {
 } from './types';
 import { createBcmsClientSecurity, errorWrapper } from './util';
 
+/**
+ * Create a new instance of the BCMS Client object.
+ */
 export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
   if (config.cmsOrigin.endsWith('/')) {
     config.cmsOrigin = config.cmsOrigin.substring(
