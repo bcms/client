@@ -71,7 +71,7 @@ export function createBcmsClientEntryHandler({
         (e) => e._id === data.template || e.name === data.template,
       );
       if (!access || !access.get) {
-        throw Error('Key cannot access this template.');
+        throw Error(`Key cannot access "${data.template}" template.`);
       }
       const result = await send<{ items: BCMSEntryParsed[] }>({
         url: `/entry/all/${data.template}/parse/${
@@ -97,7 +97,7 @@ export function createBcmsClientEntryHandler({
         (e) => e._id === data.template || e.name === data.template,
       );
       if (!access || !access.get) {
-        throw Error('Key cannot access this template.');
+        throw Error(`Key cannot access "${data.template}" template.`);
       }
       const result = await send<{ items: BCMSEntry[] }>({
         url: `/entry/all/${data.template}`,
@@ -124,7 +124,7 @@ export function createBcmsClientEntryHandler({
         (e) => e._id === data.template || e.name === data.template,
       );
       if (!access || !access.get) {
-        throw Error('Key cannot access this template.');
+        throw Error(`Key cannot access "${data.template}" template.`);
       }
       const result = await send<{ item: BCMSEntryParsed }>({
         url: `/entry/${data.template}/${data.entry}/parse/${
@@ -153,7 +153,7 @@ export function createBcmsClientEntryHandler({
         (e) => e._id === data.template || e.name === data.template,
       );
       if (!access || !access.get) {
-        throw Error('Key cannot access this template.');
+        throw Error(`Key cannot access "${data.template}" template.`);
       }
       const result = await send<{ item: BCMSEntry }>({
         url: `/entry/${data.template}/${data.entry}`,
