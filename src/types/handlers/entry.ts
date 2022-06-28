@@ -1,4 +1,9 @@
-import type { BCMSEntryParsed, BCMSEntry } from '../models';
+import type {
+  BCMSEntryParsed,
+  BCMSEntry,
+  BCMSEntryCreateData,
+  BCMSEntryUpdateData,
+} from '../models';
 
 /**
  * The BCMS entries API handler.
@@ -89,4 +94,19 @@ export interface BCMSClientEntryHandler {
      */
     skipCache?: boolean;
   }): Promise<BCMSEntry>;
+
+  /**
+   * Create an Entry.
+   */
+  create(data: BCMSEntryCreateData): Promise<BCMSEntry>;
+
+  /**
+   * Update existing Entry.
+   */
+  update(data: BCMSEntryUpdateData): Promise<BCMSEntry>;
+
+  /**
+   * Delete existing Entry.
+   */
+  deleteById(data: { _id: string; templateId: string }): Promise<void>;
 }

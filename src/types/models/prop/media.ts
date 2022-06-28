@@ -15,3 +15,9 @@ export interface BCMSPropMediaDataParsed {
 }
 
 export type BCMSMediaParsed = BCMSPropMediaDataParsed;
+
+export interface BCMSPropValueMediaData {
+  _id: string;
+  alt_text?: string;
+  caption?: string;
+}

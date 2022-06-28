@@ -86,6 +86,7 @@ export function createBcmsClientEntryHandler({
       }
       return result.items;
     },
+
     async getAllRaw(data) {
       if (!data.skipCache && enableCache && getAllLatch.r[data.template]) {
         return cacheManager.entry.find(
@@ -110,6 +111,7 @@ export function createBcmsClientEntryHandler({
       }
       return result.items;
     },
+
     async get(data) {
       if (!data.skipCache && enableCache) {
         const cacheHit = cacheManager.entryParsed.findOne(
@@ -137,6 +139,7 @@ export function createBcmsClientEntryHandler({
       }
       return result.item;
     },
+
     async getRaw(data) {
       if (!data.skipCache && enableCache) {
         const cacheHit = cacheManager.entry.findOne(
@@ -163,6 +166,55 @@ export function createBcmsClientEntryHandler({
         cacheManager.entry.set(result.item);
       }
       return result.item;
+    },
+
+    async create(data) {
+      const keyAccess = await getKeyAccess();
+      const access = keyAccess.templates.find((e) => e._id === data.templateId);
+      if (!access || !access.post) {
+        throw Error(`Key cannot access "${data.templateId}" template.`);
+      }
+      const result = await send<{ item: BCMSEntry }>({
+        url: `/entry/${data.templateId}`,
+        method: 'POST',
+        data,
+      });
+      if (enableCache) {
+        cacheManager.entry.set(result.item);
+      }
+      return result.item;
+    },
+
+    async update(data) {
+      const keyAccess = await getKeyAccess();
+      const access = keyAccess.templates.find((e) => e._id === data.templateId);
+      if (!access || !access.put) {
+        throw Error(`Key cannot access "${data.templateId}" template.`);
+      }
+      const result = await send<{ item: BCMSEntry }>({
+        url: `/entry/${data.templateId}`,
+        method: 'PUT',
+        data,
+      });
+      if (enableCache) {
+        cacheManager.entry.set(result.item);
+      }
+      return result.item;
+    },
+
+    async deleteById(data) {
+      const keyAccess = await getKeyAccess();
+      const access = keyAccess.templates.find((e) => e._id === data.templateId);
+      if (!access || !access.delete) {
+        throw Error(`Key cannot access "${data.templateId}" template.`);
+      }
+      await send({
+        url: `/entry/${data.templateId}/${data._id}`,
+        method: 'DELETE',
+      });
+      if (enableCache) {
+        cacheManager.entry.remove(data._id);
+      }
     },
   };
 

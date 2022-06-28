@@ -100,3 +100,18 @@ export interface BCMSEntryParsed extends BCMSEntity {
   meta: BCMSEntryParsedMeta;
   content: BCMSEntryContentParsed;
 }
+
+export interface BCMSEntryCreateData {
+  templateId: string;
+  status?: string;
+  meta: BCMSEntryMeta[];
+  content: BCMSEntryContent[];
+}
+
+export interface BCMSEntryUpdateData {
+  _id: string;
+  templateId: string;
+  status?: string;
+  meta: BCMSEntryMeta[];
+  content: BCMSEntryContent[];
+}
