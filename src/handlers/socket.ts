@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Socket, io } from 'socket.io-client';
 import {
+  BCMSClientConfig,
   BCMSClientSecurity,
   BCMSClientSocketEventCallback,
   BCMSClientSocketEventName,
@@ -9,14 +10,18 @@ import {
   BCMSSocketEventName,
 } from '../types';
 import { clearInterval } from 'timers';
+import { createBcmsClientConsole } from '../util';
 
 export function createBcmsClientSocketHandler({
+  config,
   cmsOrigin,
   security,
 }: {
+  config: BCMSClientConfig;
   cmsOrigin: string;
   security: BCMSClientSecurity;
 }): BCMSClientSocketHandler {
+  const cnsl = createBcmsClientConsole('Socket', config);
   const subs: {
     [eventName: string]: {
       [id: string]: BCMSClientSocketEventCallback;
@@ -38,23 +43,23 @@ export function createBcmsClientSocketHandler({
     eventName: BCMSClientSocketEventName,
     event: BCMSSocketEvent,
   ) {
+    cnsl.info('trigger', { eventName, event });
     for (const id in subs[eventName]) {
       subs[eventName][id]({ eventName, data: event }).catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(`Subs.${eventName}.${id} ->`, error);
+        cnsl.error(eventName, error);
       });
     }
     if (eventName !== 'ANY') {
       for (const id in subs.ANY) {
         subs.ANY[id]({ eventName, data: event }).catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error(`Subs.${eventName}.${id} ->`, error);
+          cnsl.error(eventName, error);
         });
       }
     }
   }
   function initSocket(soc: Socket) {
     for (const eventName in subs) {
+      cnsl.info('initSocket', eventName);
       soc.on(eventName, (data) => {
         triggerSubs(eventName, data);
       });
@@ -104,6 +109,7 @@ export function createBcmsClientSocketHandler({
             });
             socket.connect();
             socket.on('connect_error', (...data: unknown[]) => {
+              cnsl.error('s.connect_error', data);
               if (socket) {
                 socket.close();
               }
@@ -111,6 +117,7 @@ export function createBcmsClientSocketHandler({
               reject(data);
             });
             socket.on('error', (data) => {
+              cnsl.error('s.error', data);
               if (socket) {
                 socket.close();
               }
@@ -118,8 +125,12 @@ export function createBcmsClientSocketHandler({
               reject(data);
             });
             socket.on('connect', () => {
-              // eslint-disable-next-line no-console
-              console.log('Successfully connected to Socket server.');
+              cnsl.info(
+                's.connect',
+                `Successfully connected to Socket server: ${
+                  (socket as Socket).id
+                }`,
+              );
               isConnected = true;
               shouldBeConnected = true;
               initSocket(socket as Socket);
@@ -127,10 +138,13 @@ export function createBcmsClientSocketHandler({
             });
             socket.on('disconnect', () => {
               isConnected = false;
-              // eslint-disable-next-line no-console
-              console.log('Disconnected from Socket server.');
+              cnsl.info(
+                's.disconnect',
+                `Disconnected from Socket server: ${(socket as Socket).id}`,
+              );
             });
           } catch (error) {
+            cnsl.error('connect', error);
             reject(error);
           }
         });

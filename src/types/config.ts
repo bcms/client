@@ -14,9 +14,13 @@ export interface BCMSClientConfig {
    * Use memory caching. If enabled, all responses from the BCMS
    * will be saved in memory and updated only if the data changes
    * in the BCMS (using sockets).
-   * 
+   *
    * **IMPORTANT**: This option should be enabled only on server side
    * because a BCMS cannot handle infinite number of socket connections.
    */
   enableCache?: boolean;
+  /**
+   * Print useful debug information.
+   */
+  debug?: boolean;
 }

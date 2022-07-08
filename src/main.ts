@@ -117,6 +117,7 @@ export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
     getKeyAccess,
   });
   const socketHandler = createBcmsClientSocketHandler({
+    config,
     security,
     cmsOrigin: config.cmsOrigin,
   });
