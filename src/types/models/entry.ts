@@ -95,6 +95,7 @@ export interface BCMSEntryContentParsed {
 
 export interface BCMSEntryParsed extends BCMSEntity {
   templateId: string;
+  templateName: string;
   userId: string;
   status: string;
   meta: BCMSEntryParsedMeta;
