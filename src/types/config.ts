@@ -25,7 +25,7 @@ export interface BCMSClientConfig {
   debug?: boolean;
   userAgent?: {
     random?: boolean;
-    randomPrefix?: boolean;
+    randomPrefix?: string;
     exec?: string;
   };
 }
