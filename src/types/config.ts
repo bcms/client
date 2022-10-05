@@ -23,4 +23,9 @@ export interface BCMSClientConfig {
    * Print useful debug information.
    */
   debug?: boolean;
+  userAgent?: {
+    random?: boolean;
+    randomPrefix?: boolean;
+    exec?: string;
+  };
 }

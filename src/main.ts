@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { random as randomBytes } from 'crypto-js/lib-typedarrays';
 import {
   createBcmsClientFunctionHandler,
   createBcmsClientTypeConverterHandler,
@@ -90,6 +91,20 @@ export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
       }
       return (await errorWrapper({
         exec: async () => {
+          if (!conf.headers) {
+            conf.headers = {};
+          }
+          if (config.userAgent) {
+            if (config.userAgent.exec) {
+              conf.headers['User-Agent'] = config.userAgent.exec;
+            } else if (config.userAgent.random) {
+              conf.headers['User-Agent'] = `bcms-${randomBytes(16).toString()}`;
+            } else if (config.userAgent.randomPrefix) {
+              conf.headers['User-Agent'] = `${
+                config.userAgent.randomPrefix
+              }-${randomBytes(16).toString()}`;
+            }
+          }
           return await Axios(conf);
         },
         onSuccess: async (result) => {
