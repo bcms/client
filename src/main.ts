@@ -142,6 +142,7 @@ export function createBcmsClient(config: BCMSClientConfig): BCMSClient {
     socket: socketHandler,
     cacheManager,
     enableCache: config.enableCache,
+    config: config,
   });
   const typeConverterHandler = createBcmsClientTypeConverterHandler({ send });
   const mediaHandler = createBcmsClientMediaHandler({

@@ -28,4 +28,7 @@ export interface BCMSClientConfig {
     randomPrefix?: string;
     exec?: string;
   };
+  entries?: {
+    allowStatuses?: string[];
+  };
 }

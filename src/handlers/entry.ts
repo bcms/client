@@ -1,5 +1,6 @@
 import {
   BCMSClientCacheManager,
+  BCMSClientConfig,
   BCMSClientEntryHandler,
   BCMSClientSocketHandler,
   BCMSEntry,
@@ -17,12 +18,14 @@ export function createBcmsClientEntryHandler({
   enableCache,
   cacheManager,
   socket,
+  config,
 }: {
   send: SendFunction;
   getKeyAccess: GetKeyAccess;
   enableCache?: boolean;
   cacheManager: BCMSClientCacheManager;
   socket: BCMSClientSocketHandler;
+  config: BCMSClientConfig;
 }): BCMSClientEntryHandler {
   if (enableCache) {
     socket.subscribe(BCMSSocketEventName.ENTRY, async (event) => {
@@ -79,6 +82,14 @@ export function createBcmsClientEntryHandler({
         }`,
         method: 'GET',
       });
+      if (
+        config.entries &&
+        config.entries.allowStatuses &&
+        config.entries.allowStatuses.length > 0
+      ) {
+        const statuses = config.entries.allowStatuses;
+        result.items = result.items.filter((e) => statuses.includes(e.status));
+      }
       if (enableCache && result.items.length > 0) {
         getAllLatch.p[access._id] = access._id;
         getAllLatch.p[access.name] = access._id;
@@ -104,6 +115,16 @@ export function createBcmsClientEntryHandler({
         url: `/entry/all/${data.template}`,
         method: 'GET',
       });
+      if (
+        config.entries &&
+        config.entries.allowStatuses &&
+        config.entries.allowStatuses.length > 0
+      ) {
+        const statuses = config.entries.allowStatuses;
+        result.items = result.items.filter(
+          (e) => e.status && statuses.includes(e.status),
+        );
+      }
       if (enableCache && result.items.length > 0) {
         getAllLatch.r[access._id] = access._id;
         getAllLatch.r[access.name] = access._id;
@@ -134,6 +155,18 @@ export function createBcmsClientEntryHandler({
         }`,
         method: 'GET',
       });
+      if (
+        config.entries &&
+        config.entries.allowStatuses &&
+        config.entries.allowStatuses.length > 0
+      ) {
+        const statuses = config.entries.allowStatuses;
+        if (!statuses.includes(result.item.status)) {
+          throw Error(
+            `This entry has status "${result.item.status}" is not on allowed list.`,
+          );
+        }
+      }
       if (enableCache) {
         cacheManager.entryParsed.set(result.item);
       }
@@ -162,6 +195,18 @@ export function createBcmsClientEntryHandler({
         url: `/entry/${data.template}/${data.entry}`,
         method: 'GET',
       });
+      if (
+        config.entries &&
+        config.entries.allowStatuses &&
+        config.entries.allowStatuses.length > 0
+      ) {
+        const statuses = config.entries.allowStatuses;
+        if (!statuses.includes(result.item.status || '')) {
+          throw Error(
+            `This entry has status "${result.item.status}" is not on allowed list.`,
+          );
+        }
+      }
       if (enableCache) {
         cacheManager.entry.set(result.item);
       }
