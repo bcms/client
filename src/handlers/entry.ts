@@ -83,6 +83,7 @@ export function createBcmsClientEntryHandler({
         method: 'GET',
       });
       if (
+        !data.skipStatusCheck &&
         config.entries &&
         config.entries.allowStatuses &&
         config.entries.allowStatuses.length > 0
@@ -116,6 +117,7 @@ export function createBcmsClientEntryHandler({
         method: 'GET',
       });
       if (
+        !data.skipStatusCheck &&
         config.entries &&
         config.entries.allowStatuses &&
         config.entries.allowStatuses.length > 0
@@ -156,6 +158,7 @@ export function createBcmsClientEntryHandler({
         method: 'GET',
       });
       if (
+        !data.skipStatusCheck &&
         config.entries &&
         config.entries.allowStatuses &&
         config.entries.allowStatuses.length > 0
@@ -196,6 +199,7 @@ export function createBcmsClientEntryHandler({
         method: 'GET',
       });
       if (
+        !data.skipStatusCheck &&
         config.entries &&
         config.entries.allowStatuses &&
         config.entries.allowStatuses.length > 0

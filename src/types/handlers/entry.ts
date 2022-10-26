@@ -30,6 +30,7 @@ export interface BCMSClientEntryHandler {
      * to skip it when sending a request to the BCMS.
      */
     skipCache?: boolean;
+    skipStatusCheck?: boolean;
   }): Promise<BCMSEntryParsed[]>;
   /**
    * Get all entries for specified template and language.
@@ -48,6 +49,7 @@ export interface BCMSClientEntryHandler {
      * to skip it when sending a request to the BCMS.
      */
     skipCache?: boolean;
+    skipStatusCheck?: boolean;
   }): Promise<BCMSEntry[]>;
   /**
    * Get a single parsed entry by template and entry ID or slug.
@@ -71,6 +73,7 @@ export interface BCMSClientEntryHandler {
      * to skip it when sending a request to the BCMS.
      */
     skipCache?: boolean;
+    skipStatusCheck?: boolean;
   }): Promise<BCMSEntryParsed>;
   /**
    * Get a single entry by template and entry ID or slug.
@@ -93,6 +96,7 @@ export interface BCMSClientEntryHandler {
      * to skip it when sending a request to the BCMS.
      */
     skipCache?: boolean;
+    skipStatusCheck?: boolean;
   }): Promise<BCMSEntry>;
 
   /**
