@@ -79,7 +79,7 @@ export function createBcmsClientEntryHandler({
       const result = await send<{ items: BCMSEntryParsed[] }>({
         url: `/entry/all/${data.template}/parse/${
           data.maxDepth ? data.maxDepth : 2
-        }`,
+        }?pLang=${data.pLang || 'js'}`,
         method: 'GET',
       });
       if (

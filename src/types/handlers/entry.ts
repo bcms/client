@@ -31,6 +31,7 @@ export interface BCMSClientEntryHandler {
      */
     skipCache?: boolean;
     skipStatusCheck?: boolean;
+    pLang?: 'js' | 'rust'
   }): Promise<BCMSEntryParsed[]>;
   /**
    * Get all entries for specified template and language.
