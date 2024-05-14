@@ -51,7 +51,9 @@ export function createBcmsClientMediaHandler({
         onDownloadProgress:
           data && data.onProgress
             ? (event) => {
-                onProgress((100 * event.loaded) / event.total);
+                if (event.total) {
+                  onProgress((100 * event.loaded) / event.total);
+                }
               }
             : undefined,
       });

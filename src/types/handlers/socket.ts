@@ -13,7 +13,7 @@ export interface BCMSClientSocketHandler {
   /**
    * Get the socket ID.
    */
-  id(): string | null;
+  id(): string | null | undefined;
   /**
    * Connect to the BCMS socket server.
    */
