@@ -4,9 +4,12 @@
   "description": "Make external communication with BCMS easy.",
   "author": "becomes.co",
   "license": "MIT",
-  "main": "index.js",
+  "main": "./index.cjs",
+  "module": "./index.mjs",
+  "types": "./index.d.ts",
   "scripts": {
-    "build:ts": "tsc --project tsconfig.json",
+    "build:ts:mjs": "tsc --project tsconfig.json",
+    "build:ts:cjs": "tsc --project tsconfig.commonjs.json",
     "build": "npm-tool --build",
     "bundle": "npm-tool --bundle",
     "bundle:local": "npm-tool --local-dev-bundle",
@@ -33,8 +36,10 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@banez/child_process": "^1.0.3",
     "@banez/fs": "^1.0.3",
     "@banez/npm-tool": "^1.1.0",
+    "@banez/string-utility": "^1.0.1",
     "@types/chai": "^4.2.18",
     "@types/crypto-js": "^4.1.0",
     "@types/mocha": "^9.0.0",

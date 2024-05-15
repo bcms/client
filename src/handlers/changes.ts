@@ -2,7 +2,7 @@ import type {
   BCMSClientChangesHandler,
   SendFunction,
   BCMSClientChangesGetInfoData,
-} from '../types';
+} from '@becomes/cms-client/types';
 
 export function createBcmsChangesHandler({
   send,

@@ -2,7 +2,7 @@ import type {
   BCMSClientCache,
   BCMSClientCacheItem,
   BCMSClientCacheManager,
-} from '../types';
+} from '@becomes/cms-client/types';
 
 export function createBcmsClientCache<
   Item extends BCMSClientCacheItem,

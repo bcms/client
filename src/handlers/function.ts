@@ -3,7 +3,7 @@ import type {
   SendFunction,
   GetKeyAccess,
   BCMSClientFunctionHandler,
-} from '../types';
+} from '@becomes/cms-client/types';
 
 export function createBcmsClientFunctionHandler({
   send,

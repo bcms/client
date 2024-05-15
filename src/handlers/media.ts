@@ -8,7 +8,7 @@ import {
   BCMSSocketEventType,
   BCMSSocketMediaEvent,
   SendFunction,
-} from '../types';
+} from '@becomes/cms-client/types';
 
 export function createBcmsClientMediaHandler({
   send,

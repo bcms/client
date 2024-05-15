@@ -1,4 +1,4 @@
-import type { BCMSMediaType } from '../media';
+import type { BCMSMediaType } from '@becomes/cms-client/types/models/media';
 
 export type BCMSPropMediaData = string;
 

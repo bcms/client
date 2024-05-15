@@ -2,7 +2,7 @@ import type {
   BCMSClientTypeConverterHandler,
   BCMSTypeConverterResultItem,
   SendFunction,
-} from '../types';
+} from '@becomes/cms-client/types';
 
 export function createBcmsClientTypeConverterHandler({
   send,

@@ -1,16 +1,16 @@
 import type {
-  BCMSEntryContentNode,
-  BCMSEntryContentParsedItem,
-} from '../entry';
+    BCMSEntryContentNode,
+    BCMSEntryContentParsedItem,
+} from '@becomes/cms-client/types/models/entry';
 
 export interface BCMSPropRichTextData {
-  nodes: BCMSEntryContentNode[];
+    nodes: BCMSEntryContentNode[];
 }
 
 export interface BCMSPropValueRichTextData {
-  nodes: BCMSEntryContentNode[];
+    nodes: BCMSEntryContentNode[];
 }
 
 export type BCMSPropRichTextDataParsed =
-  | BCMSEntryContentParsedItem[]
-  | BCMSEntryContentParsedItem[][];
+    | BCMSEntryContentParsedItem[]
+    | BCMSEntryContentParsedItem[][];

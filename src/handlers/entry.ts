@@ -10,7 +10,7 @@ import {
   BCMSSocketEventType,
   GetKeyAccess,
   SendFunction,
-} from '../types';
+} from '@becomes/cms-client/types';
 
 export function createBcmsClientEntryHandler({
   send,

@@ -8,9 +8,8 @@ import {
   BCMSClientSocketHandler,
   BCMSSocketEvent,
   BCMSSocketEventName,
-} from '../types';
-import { clearInterval } from 'timers';
-import { createBcmsClientConsole } from '../util';
+} from '@becomes/cms-client/types';
+import { createBcmsClientConsole } from '@becomes/cms-client/util';
 
 export function createBcmsClientSocketHandler({
   config,

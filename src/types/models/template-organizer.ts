@@ -1,8 +1,8 @@
-import type { BCMSEntity } from './_entity';
+import type { BCMSEntity } from '@becomes/cms-client/types/models/_entity';
 
 export interface BCMSTemplateOrganizer extends BCMSEntity {
-  parentId?: string;
-  label: string;
-  name: string;
-  templateIds: string[];
+    parentId?: string;
+    label: string;
+    name: string;
+    templateIds: string[];
 }

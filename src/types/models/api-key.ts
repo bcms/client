@@ -1,5 +1,5 @@
 import type { BCMSUserPolicyCRUD } from './user';
-import type { BCMSEntity } from './_entity';
+import type { BCMSEntity } from '@becomes/cms-client/types/models/_entity';
 
 export interface BCMSApiKeyAccessTemplate extends BCMSUserPolicyCRUD {
   _id: string;
