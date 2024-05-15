@@ -63,12 +63,12 @@ module.exports = createConfig({
                 task: async () => {
                     await ChildProcess.spawn('npm', ['run', 'build:ts:mjs']);
                     const files = await fs.fileTree(['dist', 'mjs'], '');
-                    await fileReplacer({
-                        basePath: '',
-                        dirPath: ['dist', 'mjs'],
-                        regex: [/@becomes\/cms-client\//g],
-                        endsWith: ['.js', '.d.ts'],
-                    });
+                    // await fileReplacer({
+                    //     basePath: '',
+                    //     dirPath: ['dist', 'mjs'],
+                    //     regex: [/@becomes\/cms-client\//g],
+                    //     endsWith: ['.js', '.d.ts'],
+                    // });
                     for (let i = 0; i < files.length; i++) {
                         const fileInfo = files[i];
                         if (fileInfo.path.rel.endsWith('.d.ts')) {
@@ -100,12 +100,12 @@ module.exports = createConfig({
                 title: 'Build CJS',
                 task: async () => {
                     await ChildProcess.spawn('npm', ['run', 'build:ts:cjs']);
-                    await fileReplacer({
-                        basePath: '',
-                        dirPath: ['dist', 'cjs'],
-                        regex: [/@becomes\/cms-client\//g],
-                        endsWith: ['.js'],
-                    });
+                    // await fileReplacer({
+                    //     basePath: '',
+                    //     dirPath: ['dist', 'cjs'],
+                    //     regex: [/@becomes\/cms-client\//g],
+                    //     endsWith: ['.js'],
+                    // });
                     const files = await fs.fileTree(['dist', 'cjs'], '');
                     for (let i = 0; i < files.length; i++) {
                         const fileInfo = files[i];
